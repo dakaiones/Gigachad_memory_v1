@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import json
 import os
+import requests
 from datetime import datetime
 
 app = FastAPI()
@@ -40,3 +41,13 @@ def get_memory(user_id: str):
         return {"memory": db.get(user_id, [])}
     except:
         return {"memory": []}
+
+@app.get("/get_memory_endpoint")
+def get_memory_endpoint():
+    try:
+        # 여기에 본인의 Gist RAW 주소를 입력하세요
+        gist_url = "https://gist.githubusercontent.com/dakaiones/e8d05fdf06b54c84af3ce888de092fb8/raw/memory_endpoint.json"
+        response = requests.get(gist_url, timeout=5)
+        return response.json()
+    except Exception as e:
+        return {"error": "Failed to fetch endpoint", "detail": str(e)}
